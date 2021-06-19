@@ -1,0 +1,105 @@
+\documentclass{article}
+\nonstopmode
+
+\documentclass{article}
+\nonstopmode
+
+% Packages
+% 
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,arrows}
+\usepackage[margin=1in]{geometry}
+
+% Common Declarations
+% 
+% Make sure you change the author in common.tex
+% 
+\input{../common.tex}
+
+% Local Declarations
+% 
+\title{\course, \term\\Homework \#7}
+\newcommand{\TO}{\ensuremath{\rightarrow}}
+\newcommand{\OR}{\ensuremath{\quad|\:}}
+
+% The document
+% 
+\begin{document}
+\maketitle
+
+\question%
+Use the pumping lemma for context-free languages to prove that the following
+language is not context-free: 
+\[L = \left\{a^n:\text{$n$ is prime} \right\}\]
+\answer
+Assume for contradiction that L is a context-free language. We apply the
+pumping lemma. Let m be the longest root to leaf length. Let p be a prime
+that $p\ge m$. We pump the string $a^p \in L$. $a^p$= uvxyz, v = $a^j$ and y = $a^k$, with 
+$j + k \ge 1$ since $|vy|\ge 1 $. From the pumping lemma we have that $uv^{p+1}xy^{p+1}z \in L$. \rightarrow $a^{p+jp+kp}$ \rightarrow $a^{p(1+j+k)} \in L$ which is a contradiction since $j + k \ge 1$, $p(1+j+k)$ is not a prime number\\\\
+\question%
+Use the pumping lemma for context-free languages to prove that the following
+language is not context-free: 
+\[L = \left\{w\in \left\{a,b\right\}^* : w=\left(ab^n\right)^n \: n\geq 0
+    \right\}\]
+\answer
+Assume for contradiction that L is a context-free language. We apply the
+pumping lemma. $\Rightarrow\exists$ a p for L, we choose w = $a^p,b^{p}^2$ which
+= $(a,b^p)^p$ = $uv^ixy^iz$, $|vxy|\le p$ and $|vy|\ge 1$ therefore $p \ge 1$.\\\\
+Case 1: $|vxy|$ is all a's and $i=1$ or $a^{p+1},b^{p}^2$ which is a contradiction
+because unless p=0 $p^2$ cannot be the square of p+1.\\\\
+Case 2: $|vxy|$ is all b's and $i=1$ or $a^p,b^{p^2+1}$ which is a contradiction
+because $p^2+1$ cannot be the square of p for any number $\in \field{N}$.\\\\
+Case 3: v is all a's, and y is all b's and $i=1$ or $a^{p+1},b^{p^2+1}$ which is a contradiction
+because $p^2+1$ cannot be the square of p for any number $\in \field{N}$.\\\\
+Case 4: v is some a's and some b's and y is all b's and $i=1$ the string of a's would stay p length followed by b's then a's $<$ p followed by $b^{p^s+1}$. Which is a contradiction and $\notin L$.\\\\
+Case 5: v is all a's and y is some a's and some b's and $i=1$. The a's would increase to p+1 and the b's would stay $p^2$, but some b's followed by some a's both less than p would be between them and therefore $\notin L$ \\\\
+
+\answer 2.0
+after looking over my work I considered that since n is not an exponent in the normal sense that a different w was likely ie, if p=3 then $(ab^3)^3$ would look like abbbabbbabbb and different cases would be necessary. Plus I didn't want to delete all that work so there is that...\\
+Case 1: p=1 therfore |vxy|=1 and |vy| = 1 in this case |vy| is a or b and if i=1 then by the pumping lemma then $w=(a^{p+1}b^p)^p$ or $(a^pb^{p+1})^p$ which is $\notin L$\\\\
+Case 2: v is a and y is b and we let i=1 then $|vxy|=(a^2b^{p+1})$ which is $\notin w$\\\\
+Case 3: v is b and y is a and we let i=1 then $|vxy|=(b^{p+1}a^2)$ which is $\notin w$\\\\
+Case 4: $|vxy|$ is all b's and we let i=0 then $|vxy|=(a^2b^{p-|vy|})$ which is $\notin w$\\\\
+Case 5: v contains a and some or t number of b's, where t $<$ p,  y is all b's and i=1. $|vxy|= (ab^t)^2b^{p-|x|-|t|+|y|}$ which is $\notin w$\\\\
+Case 6: v contains all b's and y has an a plus some or t number of b's, where t $<$ p,  y is all b's and i=1. $|vxy|= b^{p-|x|-|t|+|v|}(ab^t)^2$ which is $\notin L$\\\\
+\\
+\question%
+Consider the following grammar that generates the language of comma separated
+lists of binary integers:
+\begin{align*}
+  G      &= \left(V, \Sigma, R, S \right) \\
+  V      &= \left\{S, L, D, N \right\}\\
+  \Sigma &= \left\{0,1,\textbf{,}\right\}\\
+  R      &= \left\{
+           \begin{array}{{r@{\:\rightarrow\:}l}}
+             S & L | \epsilon                          \\
+             L & N\text{\bf,}L | N                     \\
+             N & ND | D                                \\
+             D & 0 | 1  \\
+           \end{array}
+                 \right.\\
+\end{align*}
+This grammar is not LL(1).  look at the two rules for $L$ and $N$.
+
+Change the grammar to make it LL(1).  You are welcome to add additional
+variables, but you should only need two.  
+\answer
+% This is to make typesetting the grammar easier.  Modify the following LaTeX.  
+\[
+  \begin{array}{r@{\:\rightarrow\:}l}
+    S & L        \\
+    S & \epsilon \\
+    N & DN'       \\
+    N' & DN'|\epsilon    \\
+    L & NL'      \\
+    L'& ,L|\epsilon    \\
+    L & N        \\
+    D & 0        \\
+    D & 1        \\  
+  \end{array}
+\]
+\end{document}
+
+
+

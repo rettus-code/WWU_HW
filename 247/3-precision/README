@@ -1,0 +1,208 @@
+Precision is an arbitrary-precision, natural number library that supports
+reading, writing, and addition.  At least this is the goal.  Just like last
+time, I'm having some trouble with the test cases.  With the help of the Gnu
+Debugger (gdb) you should be able to help me finish the library.
+
+  The outcomes for this lab are:
+    Understand Unix process limits and file permissions
+    Become familiar with debugging with gdb
+    Strengthen your C programming 
+    
+
+Debugging is a valuable skill.  Like vi and emacs, gdb is almost universally
+available.  Sometimes all you have is an ssh account on a remote machine with a
+misbehaving program.  It is gdb to the rescue!
+
+ULIMIT
+
+  Currently the program crashes with a segmentation-fault.  Linux will create a
+core file when this happens.  (The file's name is derived from old-school core memory.
+There is an example of core memory in the department's display case.  It was a
+very popular form of memory in the 1960s.)  There should be a new file in the
+directory called "core", "precision_test.core" or something similar.  If you do
+not have a core file, the file-size limit for core files may be set too low.
+
+  You may not have noticed this, but Linux puts limits on what your programs can
+do.  You can see a list of file-size limits by executing the following:
+
+  $ ulimit -a
+  core file size          (blocks, -c) 0
+  data seg size           (kbytes, -d) unlimited
+  scheduling priority             (-e) 0
+  file size               (blocks, -f) unlimited
+  pending signals                 (-i) 256900
+  max locked memory       (kbytes, -l) 64
+  max memory size         (kbytes, -m) unlimited
+  open files                      (-n) 1024
+  pipe size            (512 bytes, -p) 8
+  POSIX message queues     (bytes, -q) 819200
+  real-time priority              (-r) 0
+  stack size              (kbytes, -s) 8192
+  cpu time               (seconds, -t) unlimited
+  max user processes              (-u) 256900
+  virtual memory          (kbytes, -v) unlimited
+  file locks                      (-x) unlimited
+
+In my case, the maximum size of my core files is zero.  No core file is
+generated when my program crashes.  We can change that with the following:
+
+  $ ulimit -c unlimited
+
+Now Linux can create a core file of any necessary size.  It is possible,
+however, that a core file does not appear when the program crashes.
+
+PERMISSIONS
+
+  Our lab computers use the Automatic Bug Reporting Tool (ABRT).  This program
+captures the core file and usually displays the "A program has crashed, do you
+want to submit a report" dialog box.  Ironically, there is a bug in ABRT that
+can prevent it from creating the core file.
+
+  To create the core file, ABRT needs permission to enter the directory.  Oddly,
+this permission is the execute bit for a directory.  The program ls displays
+file permissions as a string of characters like this:
+
+  $ ls -ld csci247
+  drwx------ 6 clausoa grp.csci.Faculty 6 Oct 12 08:59 csci247
+
+I passed two flags to ls: -l for long display, and -d to display the directory
+not the directory's contents.  The permissions are the first ten characters
+(e.g., drwx------).  The first letter, d, indicated that this is a directory.
+The remaining nine letters are three groups of three: rwx, ---, ---.  These are
+the read, write, and execute permissions for the user, group, and world
+respectively.   In this example, I have permission to read, write and execute
+the directory; the group and world have no permissions.
+
+  What does it mean to execute a directory?  You can't actually run a directory,
+it is not a program.  The execute permission allows the user, group, or world to
+traverse the directory.  For example, say you know that there is a file called
+natural.c in my directory called csci247.  Since you are not me and you are
+not in the group grp.csci.Faculty, the world permissions apply.  Since you have
+no permission, you cannot access the file natural.c.
+
+  I can give the world execute permission like this:
+
+  $ chmod o+x csci247
+  $ ls -ld csci247
+  drwx-----x 6 clausoa grp.csci.Faculty 6 Oct 12 08:59 csci247
+  
+
+Now you can access the file natural.c.  You cannot, however, list the
+directory's contents; that requires directory read permission.  You cannot add a
+new file to the directory, that requires directory write permission.
+
+  So here is the bug.  ABRT runs as a separate user that uses world permission
+to get to the working directory.  Once it is there, it changes its user-id to
+you.  So the entire path to your working directory needs world execute
+permissions:
+
+  $chmod o+x /home/clausoa
+  $chmod o+x /home/clausoa/csci247
+  $chmod o+x /home/clausoa/csci247/precision
+
+DEBUGGING
+
+  Why do we care about a core file?  It can be debugged.  The core file is a
+snapshot of memory just before the program crashes.  The state of all of the
+variables, the registers, and the call stack are all saved in the core file.
+Gdb can recover all of this state for us, but it needs the program and the
+core file:
+
+  $ gdb precision_test core
+
+After some gdb boiler-plate, gdb indicates what went wrong and where.  You
+should see something like the following:
+
+  Core was generated by `./precision_test 1234567890abcdef 1234567890abcdef'.
+  Program terminated with signal 11, Segmentation fault.
+  #0  add_naturals_aux () at natural_aux.s:24
+  24              movb  (%ecx), %cl
+  (gdb)
+  
+So we have the specific invocation of precision_test that crashed; it failed
+with a segmentation fault---it accessed a bad memory address; and it was
+executing line 24 of natural_aux.s.  I need to see a little more than just one
+line.  The list command prints ten lines around line 24. 
+
+  (gdb) list
+  19              movl  %esp, %ebp
+  21              /* (2) */
+  22              movl  8(%ebp), %eax
+  23              movl  12(%ebp), %ecx
+  24              movb  (%ecx), %cl
+  25              addb  %cl, (%eax)
+  26              setc %cl
+  27
+  28              /* (3) */
+
+Now we can see that %ecx holds the value of the second argument and line 24
+dereferences it.  I would expect the signature of this function to take at least
+two arguments and the second argument to be a pointer.  If we look at lines 22
+and 25, I would expect the first argument to be a pointer too.  
+
+Let's get a little more context.  Which function called this one?  We can ask
+gdb to follow the chain of saved ebps.  This is called a back-trace or bt.  
+
+  (gdb) bt
+  #0  add_naturals_aux () at natural_aux.s:24
+  #1  0x080489c0 in add_naturals (left=..., right=...) at natural.c:76
+  #2  0x0804885b in main (argc=3, argv=0xffc7a8c4) at precision_test.c:33
+
+Here we see that main called add_naturals and add_naturals called
+add_naturals_aux.  Let's move up the call stack or back trace to the
+add_naturals's stack frame.  
+
+
+  (gdb) frame 1
+  #1  0x080489c0 in add_naturals (left=..., right=...) at natural.c:76
+  76            add_naturals_aux(&result.bytes[i], 
+  (gdb) list
+  71         bzero(result.bytes, result.byte_count);
+  72         memcpy(result.bytes, left.bytes, left.byte_count);
+  73
+  74         /* 3 */
+  75         for(i = 0; ++i; i < right.byte_count) {
+  76            add_naturals_aux(&result.bytes[i], 
+  77                             &right.bytes[i],
+  78                             &carry);
+  79         }
+  80
+
+Looking at the call to add_naturals_aux we see that it takes three arguments.
+All three arguments are pointers of some type.  Let us do some looking
+around.  I'm curious about result and right.  The print command will show the
+values of these variables.  
+
+
+  (gdb) p result
+  $1 = {byte_count = 9, bytes = 0x97890e8 "\357\232W!\361\254h$"}
+  (gdb) p right
+  $2 = {byte_count = 8, bytes = 0x97891f8 "\357\315\253\220xV4\022"}
+
+These are both structures with two members: byte_count and bytes.  Looking at
+the for-loop on line 75, I would expect i to be something between 0 and 7.
+Let's print i.
+
+  (gdb) p i
+  $3 = 134664
+  
+Well, something went wrong.  The error is subtle.  Find it, fix it, 
+recompile, and run the test cases again.
+
+  There are three more errors in the program.  There is one more crashing bug.
+Another is an infinite loop bug.  The third is the far more common bad logic.  
+
+  Gdb has an extensive help system built-in.  For example, give gdb the command
+"help x" and you will see help for examine.  Sometimes, I prefer a list of
+useful commands.  I happen to like Marc Haisenko's "GDB Cheet Sheet."  It is
+available from the following:
+
+  http://darkdust.net/files/GDB%20Cheat%20Sheet.pdf
+
+There is one thing missing: Control-C.  Usually Control-C is handled by gdb not
+by the program.  Control-C triggers gdb to break a running program.  This is
+handy when the program loops.  
+
+  Grades:
+  1 point for fixing the first bug
+  3 points for each of the reaming three

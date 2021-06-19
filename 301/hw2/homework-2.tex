@@ -1,0 +1,134 @@
+\nonstopmode
+\documentclass[12pt]{article}
+
+% Pacakges
+%
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+% Common Declarations
+%
+% Make sure you change the author in common.tex
+%
+\input{../common.tex}
+
+% Local Declarations
+%
+\title{\course, \term\\Math Exercises \#2}
+
+\newcommand{\nats}{\ensuremath{\mathbb{N}}}
+
+% The document
+%
+\begin{document}
+\maketitle
+
+
+\begin{itemize}
+\item
+Prove each of the following statements.  Explicitly state which method
+of proof you are using: direct, contrapositive, contradiction,
+induction, {\em etc.}
+\item
+Format all solutions in \LaTeX.
+Please note any time you use {\bf Sympy} or
+other software to simplify algebraic expressions, and include the
+transcript of the interaction.
+\end{itemize}
+
+
+\question%
+If two integers have the same parity, then their sum is even.
+\answer by direct proof suppose x and y are odd and d and e are even \\
+x=2a+1 for some $a\in\mathbb{Z}$ and y=2b+1 for some $a\in\mathbb{Z}$, by definition of an odd number and\\
+d=2a for some $a\in\mathbb{Z}$ e=2b for some $a\in\mathbb{Z}$, by definition of an even number\\
+by definition of same parity both numbers are odd or both numbers are even\\
+x+y=2a+1+2b+1=2a+2b+2=2(a+b+1), a+b+1=c for some $c\in\mathbb{Z}$ x+y=2c\\ 
+d+e=2a+2b=2(a+b), a+b=c for some $c\in\mathbb{Z}$ d+e=2c\\ 
+so x+y and d+e by definition are even.\\
+%
+
+
+\question%
+Suppose $a\in\mathbb{Z}$.  If $a^2$ is not divisible by 4, then $a$ is odd.
+\answer contrapositive proof statement: if a is even then $a^2$ is divisible by 4.\\
+Suppose n is even\\
+So n=2a for some $a\in\mathbb{Z}$ by definition of an even number\\
+therefore $n^2=(2a)^2=4a^2$\\
+So $n^2$ is divisible by 4 making the contrapositive statement true\\
+Based on that proof if $a^2$ is not divisible by 4 is true then a is odd is also true.
+%
+\newpage 
+\question%
+Suppose $a,b\in\mathbb{Z}$.  If $4\mid (a^2+b^2)$, then $a$ and $b$ are not both
+odd.
+\answer contrapositive proof: Suppose $4\mid (a^2+b^2)$, and both $a$ and $b$ are odd.\\
+let a=2m+1 and b=2n+1 for some m and n $\in\mathbb{Z}$\\
+$a^2+b^2=(2m+1)^2+(2n+1)^2=4m^2+4m+4n^2+4n+2=4(m^2+m+n^2+n)+2$\\
+Then $4\nmid (a^2+b^2)$%
+
+  
+\question%
+For all $n\in\nats$:
+\begin{align*}
+  \sum_{i=1}^n i(i+1) &= \frac{n(n+1)(n+2)}{3} \\
+                     &= \frac{1}{3}\times
+                       \left(n\left(n+1\right)\left(n+2\right)\right) \\
+\end{align*} 
+\answer%
+Base case n=1   
+\begin{align*}
+                1(1+1)&= \frac{1}{3}\times
+                       \left(1\left(1+1\right)\left(1+2\right)\right) \\
+                  2  &= 2\\
+\end{align*}
+Induction hypothesis: Assume that for some $n\ge1$ we have
+\begin{align*}
+   \sum_{k=1}^n k(k+1) &= \frac{n(n+1)(n+2)}{3} \\
+   \sum_{k=1}^{n+1} k(k+1)&= \left(n+1\right)\left(n+2\right)\times\frac{1}{3}
+                       \left(n\left(n+1\right)\left(n+2\right)\right) \\
+                       &=\frac{1}{3}\left(n+1\right)\left(n+2\right)\left(n+3\right)
+\end{align*}
+The formula holds for n, so it holds for n + 1. Therefore, the identity is true for all integers $n\ge1$.
+% Notice how the equal signs are lined up in the generated PDF?  That is what
+% the align* environment does; it aligns the symbol after the ampersand (&).  
+%
+
+
+\newpage
+\question%
+For all $n\in\nats$:
+\[
+  \sum_{i=1}^n (8i-5) = 4n^2 - n  
+\]
+\answer Let F(n) be: $3+11+19+...+(8n - 5)=4n^2-n$\\%
+Base case n=1   
+\begin{align*}
+                (8(1)-5)&=  4(1)^2 - 1\\
+                  3  &= 3\\
+\end{align*}
+  Induction hypothesis: Assume F(k) is true $[(8k-5)=4k^2-k]$ for F(k+1)
+\begin{align*}
+        (8k-5)+(8(k+1)-5)&=4(k+1)^2−(k+1)\\
+         4k^2-k+8k+3 &= 4(k^2+2k+1)-k-1\\
+         4k^2+7k+3 &= 4k^2+7k+3\\
+\end{align*}  
+F(k+1) is true when F(k) is true\\
+\\
+\question%
+For all $n\in\nats$:
+\[
+  9\mid (4^{3n} + 8)
+\]
+\answer%
+Base case n=1   %
+\begin{align*}
+                &9\mid (4^{3(1)} + 8)\\
+                &9\mid 72 = 8\\
+\end{align*}
+Induction step assume $9\mid (4^{3n} + 8)$ is true for $n\ge1$ then $4^{3n} + 8=9c$ for some $c\in\mathbb{Z}$: \\
+\\
+$4^{3(n+1)} + 8 = 4^3\cdot4^{3n} + 8 = 64\cdot4^{3n} + 8 = 63\cdot4^{3n} + (4^{3n} + 8) = 9(7\cdot4^{3n} + p)$\\
+
+$9\mid (4^{3(n+1)} + 8)$ by induction holds up for any $n\ge0$ where $n\in\nats$ 
+\end{document}

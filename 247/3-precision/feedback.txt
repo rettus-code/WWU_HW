@@ -1,0 +1,4 @@
+rettusm
+Do not add inline comments that just describe bug fixes
+Bug fix for read_naturals infinite loop incorrect - That loop needs to run when i is 1.
+7/10

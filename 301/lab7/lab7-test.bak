@@ -1,0 +1,110 @@
+#lang racket
+
+(require rackunit "lab7.rkt")
+(displayln 1)
+(define add
+  (lambda (a b)
+    (cond ((and (number? a) (number? b)) (+ a b))
+          ((and (list? a) (list? b)) (append a b))
+          (else (error "unable to add" a b)))))
+(displayln 2)
+(define e1 (map list
+                 '(x y z + - * cons car cdr nil empty? = equal? < else  add list)
+             (list 2 4 6 + - * cons car cdr '() empty? = equal? < #t    add list)))
+
+; Factorial without loops or recursion!!!!
+(displayln 3)
+(check =
+       (evaluate '(let ((f (lambda (f n) (if (= n 0) 1 (* n (f f (- n 1)))))))
+                    (f f 10)) e1)
+       (* 10 9 8 7 6 5 4 3 2 1))
+(displayln 4)
+(check =
+       (evaluate '(let ((f (lambda (f n) (if (= n 0) 1 (* n (f f (- n 1)))))))
+                    (let ((factorial (lambda (n) (f f n))))
+                      (factorial 10))) e1)
+       (* 10 9 8 7 6 5 4 3 2 1))
+; An alternative approach
+(displayln 5)
+(check =
+       (evaluate '(let ((f (lambda (f) (lambda (n) (if (= n 0) 1 (* n ((f f) (- n 1)))))))) ((f f) 10)) e1)
+       (* 10 9 8 7 6 5 4 3 2 1))
+(displayln 6)
+(check =
+       (evaluate '(let ((f (lambda (f) (lambda (n) (if (= n 0) 1 (* n ((f f) (- n 1))))))))
+                    (let ((factorial (f f)))
+                      (factorial 10))) e1)
+       (* 10 9 8 7 6 5 4 3 2 1))
+(displayln 7)
+; And now with letrec:
+(check =
+       (evaluate '(letrec ((f (lambda (n) (if (< n 1) 1 (* n (f (- n 1))))))) (f 5)) e1)
+       120)
+(check eq?
+       (evaluate '(letrec ((even? (lambda (n) (if (= n 0) (= 1 1) (odd? (- n 1)))))
+                           (odd? (lambda (n) (if (= n 0) (= 1 2) (even? (- n 1)))))
+                           (plus (lambda (a b) (if (= a 0) b (+ 1 (plus (- a 1) b))))))
+                    (even? (plus 4 5))) e1)
+       #f)
+
+(check =
+       (evaluate '(let ((f (lambda (x) (* 3 x)))) (let ((f (lambda (x) (f (f x))))) (f 2))) e1)
+       18)
+
+(check =
+       (evaluate '(letrec ((f (lambda (x) (if (= 0 x) 1 (* x (f (- x 1)))))))
+                    (f (let ((f (lambda (x) (* 3 x))))
+                         (let ((f (lambda (x) (f (f x))))) (f 2)))))
+                 e1)
+       (* 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1))
+(check =
+       (evaluate '(letrec ((f (lambda (x) (if (= 0 x) 1 (+ x (f (- x 1)))))))
+                    (f
+                     (let ((f (lambda (x) (f (+ x 2)))))
+                       (f
+                        (let ((f (lambda (x) (f (+ x 3)))))
+                          (f 3)))))) e1)
+       305372)
+
+(check equal?
+       (evaluate
+        '(letrec ((append
+                   (lambda (a b)
+                     (if (empty? a) b
+                         (cons (car a)
+                               (append (cdr a) b))))))
+           (append (list 1 2 3) (list 4 5 6)))
+        e1)
+       '(1 2 3 4 5 6))
+
+(check equal?
+       (evaluate
+        '(letrec ((reverse
+                   (lambda (ls)
+                     (if (empty? ls) nil
+                         (append (reverse (cdr ls))
+                                 (cons (car ls) nil)))))
+                  (append
+                   (lambda (a b)
+                     (if (empty? a) b
+                         (cons (car a)
+                               (append (cdr a) b))))))
+           (reverse (list 1 2 3 4 5)))
+        e1)
+       '(5 4 3 2 1))
+
+(check equal?
+       (evaluate
+        '(letrec
+             ((map
+               (lambda (f ls)
+                 (if (empty? ls)
+                     nil
+                     (cons (f (car ls))
+                           (map f (cdr ls)))))))
+           (map
+            (lambda (x) (list x (* 2 x)))
+            (list 1 2 3 4)))
+        e1)
+       '((1 2) (2 4) (3 6) (4 8)))
+

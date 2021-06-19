@@ -1,0 +1,253 @@
+\documentclass[letterpaper,12pt]{article}
+\nonstopmode
+
+\usepackage{tgschola}
+\usepackage[T1]{fontenc}
+\usepackage[margin=.75in,letterpaper]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{hyperref}
+\usepackage{multicol}
+
+
+\makeatletter
+\renewcommand\section{%
+  \@startsection {section}{1}{\z@}%
+  {-2.5ex \@plus -1ex \@minus -.2ex}%
+  {1.0ex \@plus.2ex\@minus-.2ex}%
+  {\normalfont\Large\bfseries}}
+\makeatother
+
+
+\title{CSCI~301: Formal Languages and Functional~Programming\\
+  \small ($5$ credits)}
+\author{\small Western Washington University}
+\date{\small Winter~2021}
+\begin{document}
+\maketitle
+
+\begin{multicols}{2}
+\begin{tabular}[t]{ll}
+Instructor   & Aran Clauson \\
+Office       & CF~411    \\
+Office Hours & TBD       \\
+Email        & Aran.Clauson@wwu.edu\\
+Phone        & (360)~650-3819\\
+\end{tabular}
+\columnbreak
+\begin{tabular}[t]{ll}
+  TA    & Abby von Boeselager-Smith\\
+  Email & vonboea@wwu.edu\\
+  \\
+  TA    & Quentin Jensen \\
+  Email & jensenq@wwu.edu\\
+\end{tabular}
+\end{multicols}
+
+\setlength{\parskip}{1ex}
+\section*{Course Description}
+ Introduction to discrete structures important to computer science, including
+ sets, trees, functions, and relations. Proof techniques. Introduction to the
+ formal language classes and their machines, including regular languages and
+ finite automata, context free languages and pushdown automata. Turing machines
+ and computability will be introduced. Programming using a functional language
+ is required in the implementation of concepts. Includes lab.
+
+{\small \textbf{Prerequisites:} CSCI~145}
+
+\section*{Meeting Times}
+\begin{center}
+  \begin{tabular}{l|l|l|l}
+    CRN   & Lecture  & Lab & Final \\ \hline
+    13585 & MTWF 10:00--10:50am & Tue 8:00--9:50am   & Mon Mar~15 8:00--10:00am\\
+    13586 & MTWF 10:00--10:50am & Fri 8:00--9:50am   & Mon Mar~15 8:00--10:00am\\
+    14109 & MTWF 9:00--9:50am   & Tue 12:00--1:50pm  & Thr Mar~18 8:00--10:00am\\
+    14110 & MTWF 9:00--9:50am   & Wed 10:00--11:50am & Thr Mar~18 8:00--10:00am\\
+  \end{tabular}
+\end{center}
+
+Meetings will take place via Zoom.  A computer and Internet connection is
+required.  Meeting URLs and passcodes will be posted to our Canvas
+site:\url{http://canvas.wwu.edu/}.
+
+\section*{Texts \& Resources}
+This class is three parts: discrete math, computer science \emph{theory}, and
+functional programming.  Discrete mathematics deals with sets, lists, and proof
+strategies (e.g., proof by induction).  Computer science theory deals with
+simplified, idealized machines and what they are capable of computing.  This is
+almost always described as language acceptance problems.  We will learn the
+\emph{Scheme} programming language.  It is a functional language and its
+simplicity, power, and mathematical elegance will inform our study of computers
+in the abstract, and it will also teach us new styles of programming.
+
+\begin{itemize}\setlength{\parskip}{0ex}
+\item \url{http://www.people.vcu.edu/~rhammack/BookOfProof/}
+\item \url{http://cg.scs.carleton.ca/~michiel/TheoryOfComputation/}
+\item \url{http://ds26gte.github.io/tyscheme/}
+\item \url{http://racket-lang.org/}
+\item \url{https://www.tug.org/texlive/}
+\end{itemize}
+
+Other resources will be made available throughout the term.  
+
+\section*{Outcomes}
+Upon completion of this course, students will demonstrate:
+\begin{enumerate}\setlength{\parskip}{0ex}
+\item
+  Thorough understanding of the mathematical definitions of concepts important
+  to computer science, including sets, tuples, lists, strings, languages,
+  graphs, trees, functions and relations
+\item
+  The ability to prove basic theorems involving these mathematical concepts
+\item
+  The ability to employ effectively the functional programming style in a
+  functional programming language
+\item
+  Solid understanding of fundamental classes of languages, including regular and
+  context free, and their corresponding machines
+\item
+  Basic understanding of Turing machines and computability
+\item
+  Basic understanding of important algorithms, including conversion of finite
+  automata to different forms, conversion of grammars to machines
+\item
+  Basic understanding of LL(k) and LR(K) grammars and the parsing techniques
+  used for those grammars
+\end{enumerate}
+
+\section*{Grading Policies}
+There will be 7 homework assignments, 8 lab assignments, one midterm, one final,
+and a varying number of in-class exercises.  Assignments are weighted as
+follows: 
+
+\begin{center}
+  \begin{tabular}[t]{ll}
+    25\% & Homework \\
+    25\% & Labs\\
+    20\% & Midterm\\
+    20\% & Final (required) \\
+    10\% & In-Class participation\\
+  \end{tabular}
+\end{center}
+
+Final grades are computed as follows:
+\begin{verbatim}
+(define grade 
+  (lambda (pct)
+    (cond ((> pct 0.90) #\A)
+          ((> pct 0.80) #\B)
+          ((> pct 0.70) #\C)
+          ((> pct 0.60) #\D)
+          (else         #\F)
+    )
+  )
+)
+\end{verbatim}
+Pluses and minuses are assigned at my discretion.  The final exam is required! 
+
+
+\section*{Tentative Schedule}
+
+\begin{center}
+  \begin{tabular}{l|ccc|l|l}
+    & \multicolumn{3}{c|}{Reading} & & \\
+    Week   & TYS   & BoP      & ITC & Labs  & Notes \\\hline
+    Jan~4  & 1     & 1,2,3    &     &       &       \\
+    Jan~11 & 2,3,4 & 4,5,6    &     & Lab 1 &       \\
+    Jan~19 & 5,6,7 & 7,8,9,10 &  1  & Lab 2 &       \\
+    Jan~25 &       & 11,12    &  2  & Lab 3 &       \\
+    Feb~1  &       & 13,14    &  2  & Lab 4 &       \\
+    Feb~8  &       &          &  3  & Lab 5 & Midterm Monday Feb~8\\
+    Feb~15 &       &          &  3  & Lab 6 &       \\
+    Feb~22 &       &          &  4  & Lab 7 &       \\
+    Mar~1  &       &          &  5  & Lab 8 &       \\
+    Mar~8  &       &          &     &       & Prep Week\\
+  \end{tabular}
+\end{center}
+\textbf{TYS} is tyscheme, \textbf{BoP} is the Book of Proof, and \textbf{ITC} is
+Introduction to Theory of Computation.  
+
+\section*{Communication}
+We will be using Canvas to post assignments and grades, but \textbf{do not} use
+Canvas conversations to contact me.  I do not check Canvas for messages.  Please
+use my email address, phone number, or stop by the office hours meeting.
+
+\section*{Academic Honesty}
+Academic dishonesty is not tolerated at Western Washington University. Someone
+commits an act of academic dishonesty when he or she participates in
+representing something as the work of a student that is not in fact the work of
+that student. A Western student who is caught committing such an act at Western
+typically fails the course in which it occurred, and repeated such acts can lead
+to dismissal from the University. For a full description of the academic honesty
+policy and procedures at Western, see Appendix D in the catalog.
+
+\section*{Accommodations}
+This course is intended for all WWU students, including those with visible or
+invisible disabilities. Students with disabilities will be provided equitable
+access to educational experiences and opportunities. If, at any point in the
+quarter, you find yourself not able to fully access the space, content, and
+experience of this course, please first contact the Disability Access Center
+(DAC) to discuss potential accommodations. Faculty and staff partner with the
+DAC in the implementation of accommodations.
+
+If you already have accommodations set up through the DAC, please be sure to
+send your Faculty Notification Letter the myDAC portal, and reach out to the DAC
+so they can discuss how your approved accommodations apply to this course.
+
+If you are unsure if accommodations are appropriate for you, contact the DAC for
+more information, temporary assistance, or connections to other resources:
+\texttt{https://disability.wwu.edu} or 360-650-3083.
+
+\section*{Flexibility}
+This syllabus is subject to change.  Changes, if any, will be announced in
+class.  Students will be held responsible for all changes.
+
+\section*{Religious Accommodation}
+
+Western provides reasonable accommodation for students to take holidays for
+reasons of faith or conscience or for organized activities conducted under the
+auspices of a religious denomination, church, or religious
+organization. Students seeking such accommodation must provide written notice to
+their faculty within the first two weeks of the course, citing the specific
+dates for which they will be absent.  ``Reasonable accommodation'' means that
+faculty will coordinate with the student on scheduling examinations or other
+activities necessary for completion of the course or program and includes
+rescheduling examinations or activities or offering different times for
+examinations or activities.  Additional information about this accommodation can
+be found in SB 5166.
+
+\section*{Student Rights \& Responsibilities Code}
+In this course, students are held responsible for upholding all aspects of
+Western's Academic Honesty Policy and Procedure, and the Student Rights and
+Responsibilities Code.
+
+\section*{Emergency Response}
+Campus Emergencies: If during class an emergency arises in this classroom,
+building or vicinity, your instructor may inform you of actions to follow to
+enhance your safety. As a student in this class, you are responsible for knowing
+emergency evacuation routes from this classroom. Know which of Western’s three
+major disaster meeting locations is closest to this building (Old Main green,
+grassy oval at Communications Facility or tennis courts).
+
+Watch emergency videos and information at emergency.wwu.edu. If police or
+university officials order the class to evacuate the classroom or building, do
+so in a calm and orderly manner. Assist those who might need help in reaching a
+barrier-free exit. You may receive Western Alert emergency information via the
+building enunciation system or by text message, email, Facebook or Twitter.
+
+\section*{Finals}
+
+Finals Preparation Week (a.k.a. “Dead Week”): In preparation for Finals Week,
+with some exceptions, exams are not to be administered and new graded
+assignments shall not be introduced beyond the 5th week of the term that would
+be due this week.
+
+Finals Week: Final examinations, given in most courses at Western during the
+last week of the quarter, are administered according to a Finals Schedule
+(exceptions for lab courses). This generally differs from the usual class
+meeting times. The scheduled days and hours for these examinations may not be
+changed. For details about what happens when a student does not take a final,
+see the Catalog. If students find they are scheduled to take three or more
+examinations in one day, any of their instructors may arrange an examination
+later during finals week.
+
+\end{document}

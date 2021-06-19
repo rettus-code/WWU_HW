@@ -1,0 +1,173 @@
+                                    ABSTRACT
+                                    --------
+At the end of this lab, you should understand:
+
+ 1) C's array/pointer duality;
+ 2) Casting pointers in C (specifically to and from void*);
+ 3) Defining, passing, and calling functions by pointer.
+
+This lab asks you to complete a generic sorting algorithm by adding a third,
+function parameter and update the two test programs to use your new parameter.
+The following writeup walks you through the first two parts of this lab:
+completing the sort_array function and updating the sort_strings program.  
+
+
+                                    WRITEUP
+                                    -------
+Once again, I need your help.  I am working on a general purpose sorting
+routine.  That is, I am tired of writing a sort for each data-type.  My
+generalized sorting function is defined in sort.h and implemented in sort.c.
+
+
+I think I was pretty clever with the array definition.  The array to be sorted
+contains void*s.  A void* is simply a pointer to an unknown type.  Let's say
+that I have an array of strings, for example.  The actual array is an array of
+char*s and it would look like this:
+
+    Array:
+       +--------+------+------+
+       |        |      |      |
+       |    |   |  |   |  |   |
+       +----+---+--+---+--+---+
+            |      |      |                    +--------------+
+            |      |      +------------------> |Third string\0|
+            |      |                           +--------------+
+            |      |                           +---------------+
+            |      +-------------------------> |Second string\0|
+            |                                  +---------------+
+            |                                  +--------------+
+            +--------------------------------> |First string\0|
+                                               +--------------+
+
+The array has size 3, but each string has a different length.  For the most
+part, we don't care what the pointers point at.  
+
+
+Here is the problem: we care what the pointers point at regarding ordering.  The
+only way I can compare void*s is by where they point in memory.  This is not
+helpful.  Pointers into the .text section would sort before .data or the stack.
+I need a generic way to compare two unknown data types.
+
+
+Consider the example above: an array of strings.  I could add a compare-function
+for strings in sort.c.  This function would look something like this:
+
+  static
+  int ordered_strings (void* left, void* right)
+  {
+     char* left_string = (char*) left;
+     char* right_string= (char*) right;
+     return strcmp (left_string, right_string) < 0;
+  }
+
+All this function does is cast the void*s to char*s.  We happen to know that
+this is correct in this example.  The actual comparison is performed by the
+C-library function strcmp.
+
+The test in sort_array needs updating.  Currently, the test looks like this:
+
+  if ( Array[i] < Array[i+1] ) {
+    swap(&Array[i], &Array[i+1]);  
+    have_swapped = 1;
+  }
+
+See how it compares the addresses?  For strings, the test would look like this:
+
+  if ( ordered_strings (Array[i], Array[i+1]) ) {
+    swap(&Array[i], &Array[i+1]);  
+    have_swapped = 1;
+  }
+
+This will work for strings, but defeats the goal; this is not a generic sorting
+function.
+
+
+Instead of adding every possible ordering of every data type to sort_array, we
+can pass a comparison function as an argument.  Technically we cannot pass a
+function as an argument, but we can pass a pointer to a function.  This syntax,
+however, is strange.
+
+
+Right now, sort_array looks like this:
+
+  void sort_array(void* Array[], unsigned size);
+
+We need to add a third parameter, let's call it ordered.  In C, we usually
+declare the type followed by the name (e.g., void* Array[], unsigned size,
+etc.).  The name of the function pointer is in the middle and has a weird set of
+parentheses.  The new declaration of sort_array looks like this:
+
+  void sort_array(void* Array[], unsigned size, int (*ordered)(void*,void*));
+
+See what I mean about the strange syntax?  The parentheses around the symbol
+bind the asterisk to the name rather than to the return type.  Otherwise, it
+would be a function that returns an int*.
+
+
+Using the function is very simple.  The test now looks like this:
+
+  if ( ordered(Array[i], Array[i+1]) ) {
+    swap(&Array[i], &Array[i+1]);  
+    have_swapped = 1;
+  }
+
+We can use the function parameter like any other function, but only within
+sort_array.  
+
+
+Now the caller has to provide an array, its size, and a function that determines
+if the two whatever-they-ares are in the correct order.  
+
+
+Let's fix sort_strings.  Right now, it only passes the first two arguments to
+sort_array.  We need to create the third argument, a function that compares two
+strings, but we have already done this.  However, we put it in the wrong file.
+Move compare_strings from sort.c to sort_strings.c.  Now we can correct the call
+to sort_array in main:
+
+  sort_array((void**)data, data_size, &ordered_strings);
+
+
+Since we have only fixed sort_strings, asking make to build everything would
+create a bunch of errors.  We can build just sort_strings with the following
+make command:
+
+  $make sort_strings
+
+And we can use sort_strings to test:
+
+  $./sort_strings 
+  "rodeo" and "reading" are out of order
+  "reading" and "polish" are out of order
+  "polish" and "lima" are out of order
+  "lima" and "job" are out of order
+  "job" and "german" are out of order
+  "german" and "differently" are out of order
+  "differently" and "ares" are out of order
+
+Hmm,  something went wrong.  I think we sorted in the wrong direction.  I'm sure
+you can fix it.
+
+
+
+The second set of tests is sort_struct.  This one is slightly more complicated.
+Rather than strings, it is an array of pointers to structures.  Create an
+ordering function such that sort_array orders the cars in ascending order or
+years.
+
+In total, you should
+
+  1) Finish implementing the generic sort_arrays function;
+  2) Update sort_strings to sort in alphabetic order; and
+  3) Update sort_structs to sort in increase model year order.
+
+Do not modify the for-loop in the main functions.  It is there to ensure that
+the arrays are sorted in the correct order.  
+
+GRADING:
+  
+2 pts for sorting strings correctly
+5 pts for sorting cars correctly
+3 pts for coding style.
+
+

@@ -1,0 +1,110 @@
+\documentclass{article}
+\nonstopmode
+
+% Packages
+% 
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage[margin=1in]{geometry}
+
+% Common Declarations
+% 
+% Make sure you change the author in common.tex
+% 
+\input{../common.tex}
+
+% Local Declarations
+% 
+\title{\course, \term\\Math Exercises \#3}
+\newcommand{\nats}{\ensuremath{\mathbb{N}}}
+\renewcommand{\theenumi}{\alph{enumi}}
+
+% The document
+% 
+\begin{document}
+\maketitle
+
+\question%
+%
+Consider the relation $|$ (divides) on the set $\mathbb{Z}$.
+
+\begin{enumerate}
+\item Prove or disprove: $|$ is reflexive.
+\answer \forall x $\in\mathbb{Z}$ $x=1x$, so $x|x$ and therefore reflexive.
+\item Prove or disprove: $|$ is symmetric.
+\answer Suppose x, y, z $\in\mathbb{Z}$ are such that $x|y=z$ so $y=zx$\\
+$x=z|y$. Therefore $x|y\neq\ y|x$ $\forall\ z\in\mathbb{Z}$ where $z\neq\ |1|$\\
+and is not symmetric.
+\item Prove or disprove: $|$ is transitive.
+\answer Suppose x, y, z $\in\mathbb{Z}$ are such that $x|y$ and $y|z$. Then a and b\\
+are integers so that xa=y and yb=z. ab$\in\mathbb{Z}$ and x(ab)=z, so $x|z$.\\
+The relationship is transitive.
+\end{enumerate}
+
+\question%
+%
+Assume $R$ and $S$ are two equivalence relations on a set $A$.
+
+\begin{enumerate}
+\item Prove or disprove: $R\cup S$ is reflexive.
+\answer let $a\in\ A$ Since R and S are equivalent relations R and S are reflexive\\
+So $(a,a)\in\ R$ and $(a,a)\in\ S$\\ $R\cup S$ contains all elements in either R or S.\\
+$(a,a)\in\ R\cup S \forall a \in A$ and therefore $R\cup S$ is reflexive
+\item Prove or disprove: $R\cup S$ is symmetric.
+
+\begin{align*}
+ Let (x,y) \in R\cup S\Rightarrow (x,y) \in R  &\bigvee (x,y) \in S \\
+\Rightarrow (y,x) \in R  &\bigvee \Rightarrow (y,x) \in S \\
+\Rightarrow (y,x) \in R\cup S  &\bigvee \Rightarrow (y,x) \in R\cup S\\   
+\Rightarrow R\cup S symmetric &\bigvee \Rightarrow R\cup S symmetric
+\end{align*} 
+\item Prove or disprove: $R\cup S$ is transitive.
+\answer A={a,b,c} and R and S are equivalent relations on A. Then let\\
+\begin{align*}
+    R &=\{(a,a),(b,b),(c,c),(a,b),(b,a)\}\\
+    S &=\{(a,a),(b,b),(c,c),(b,c),(c,b)\}\\
+\end{align*}
+Then\\
+\begin{align*}
+    R \cup S &=\{(a,a),(b,b),(c,c),(a,b),(b,a),(b,c),(c,b)\}\\
+\end{align*}
+$a(R\cup S)b\wedge b(R\cup S)c\nRightarrow a(R\cup S)c$, thus $R\cup S$  is not transitive
+\end{enumerate}
+
+\question%
+%
+Consider the function $\theta : \{0,1\}\times\mathbb{N} \rightarrow \mathbb{Z}$
+defined as $\theta(a,b) = a -2ab + b$
+
+\begin{enumerate}
+\item Prove or disprove: $\theta$ is injective.
+\answer We show that $\theta$ is injective by contrapositive proof.\\ Suppose $\theta$(a,b) = $\theta$(c,d). then $a-2ab+b=c-2cd+d$\\
+we know the first element of our ordered pair is either 0 or 1\\ Suppose a=c=1. Then\\
+\begin{align*}
+    a-2ab+b&=c-2cd+d\\ 1-2b+b&=1-2d+d\\ -2b+b&=-2d+d\\ -b&=-d\\ b&=d
+\end{align*}
+Suppose a=c=0. Then
+\begin{align*}
+    a-2ab+b&=c-2cd+d\\ 0-0+b&=0-0+d\\ b&=d
+\end{align*}
+Now suppose a=1 and c=0. Then
+\begin{align*}
+    a-2ab+b&=c-2cd+d\\ 1-2b+b&=0-0+d\\ 1-b&=d
+\end{align*}
+so $\theta(a,b)=\theta(c,d)\Rightarrow(a,b)=(b,d) $ therefore $\theta$ is injective.
+\pagebreak
+\item Prove or disprove: $\theta$ is surjective.
+\answer Disprove that $\theta$ is surjective by direct proof.
+\begin{align*}
+ f(a) &= b\\ a - 2ab + b &= 0\\ -b(2a-1) &=-a\\ b&=a/(2a-1)
+\end{align*}
+b $\in Z$ where f(a)=b=a-2ab+b. Now suppose f(a)=2
+\begin{align*}
+    a-2ab+b&=0\\ a-4a+2&=0\\ -3a&=-2\\ a&=2/3
+\end{align*}
+$2/3 \notin$ N and therefore the function is not surjective.
+\end{enumerate}
+
+\end{document}
+
+
+

@@ -1,0 +1,12 @@
+rettusm
+Didn't need to remove all comments, you should have kept the program and function header comments. Only the block comment hints needed to be removed.
+Puzzle 2 matches so long as first input is 1. The condition being used to determine the return value isn't quite right.
+Instead of trying to calculate the return value inside the loop, consider what the loops job should be: matching tokens until it either runs out of input for fails a match. At this point, the loop should end, and you can determine if the matching was a success or failure by the function locals.
+Puzzle 3. Need to forward declare matchup in order to call it in matches. Error when compiling with make because of no forward declaring and hitting end of function without a return.
+Need to clean up indentation and whitespace usage. Code readability needs improvement.
+Remove debug prints before submission.
+Recursive structure needs improvement. You shouldn't need to do any work in matches, and shouldn't need an if-else there to determine return value. matchup should handle the work, matches should just do the setup. You need to use a return statement when making the recursive call in matchup, or you discard the work done by the recursion.
+It is also possible to reach the end of the function without returning because both returns are wrapped in if statements. This code will also always return 0, because matchup has only two return statements: one makes a recursive call, and the other one returns y right after it has been set to 0.
+Instead of using early returns, consider having two branches that handle the separate cases of the recursive function with one return in each branch. For any given call, the function will either need to make another recursive call, or it will end recursion because a match either succeeded or failed.
+No puzzle 4.
+6/10

@@ -1,0 +1,63 @@
+\documentclass{article}
+\nonstopmode
+
+% Packages
+% 
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,arrows}
+\usepackage[margin=1in]{geometry}
+
+% Common Declarations
+% 
+% Make sure you change the author in common.tex
+% 
+\input{../common.tex}
+
+% Local Declarations
+% 
+\title{\course, \term\\Homework \#6}
+\tikzset{
+  ->, >=stealth', node distance=.75in, initial text=,
+  every state/.style={thick, fill=gray!10}
+  }
+
+% The document
+% 
+\begin{document}
+\maketitle
+
+\question%
+Prove that the language $L_1= \left\{a^ib^j\mid i \geq j \geq 0\right\}$ is not
+regular using the pumping lemma.
+\answer
+Assume that l is a regular language.  Consider the string $s=a^p b^p$ then $s \epsilon A\; 
+and\; |s| = 2p \ge p$.\\
+By the pumping lemma, s can be written as s = xyz, where $y \neq\epsilon, |xy| \ge p$, and $xy^iz 
+\epsilon A$ for all $i \ge 0$.\\\\
+Since $|xy| \ge p$, the string y contains only 0s. Since $y \neq \epsilon$, y contains at
+least one 0. Consider the string $xy^0z = xz$. The number of 1s in this string
+is equal to p, whereas the number of 0s is less than p. Therefore, the
+string $xy^0z$ is not contained in A. But, by the pumping lemma, this string
+is contained in A. This is a contradiction and, therefore, A is not a regular
+language.\\\\
+\question%
+Prove that the language of Question~ is context-free by providing a context-free
+grammar for $L_1$.
+\answer
+G = (V = {S}, $\Sigma = \{a,b\}$, $R=\{S\rightarrow \epsilon, S\rightarrow a, S\rightarrow aSb\}$,
+$S\rightarrow\epsilon\mid a\mid aSb )$\\\\
+\question%
+Prove that the language
+$L_3=\left\{a^ib^jc^k \mid i = j \mbox{ or } j = k\right\}$ is context-free by
+providing a context-free grammar for $L_3$.
+\answer
+G = $(V = (S, S_{1},S_{2},S_{3},S_{4}),\:\Sigma = \{a,b,c\}$,\\ $R = \{S\rightarrow S_{1}S_{2}\mid
+S_{3}S_{4}\mid \epsilon,\; S_{1}\rightarrow aS_{1}b\mid\epsilon,\; S_{2}\rightarrow cS_{2},\;
+S_{3}\rightarrow aS_{3}\mid\epsilon,\; S_{4}\rightarrow bS_{4}c\mid\epsilon\},\\
+S\rightarrow\epsilon\mid S_{1}\rightarrow aS_{1}b\mid S_{2}\rightarrow cS_{2},\\
+S\rightarrow\epsilon\mid S_{3}\rightarrow aS_{3}\mid S_{4}\rightarrow bS_{4}c$)
+
+
+\end{document}
+

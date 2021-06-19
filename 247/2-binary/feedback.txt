@@ -1,0 +1,7 @@
+rettusm
+Indentation of first function is different from the rest.
+No solution comments. Each function should have a comment that goes with it that gives an overview of your approach.
+51/71
+3/5
+54/76
+71.05
